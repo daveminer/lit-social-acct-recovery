@@ -7,6 +7,8 @@ import { StyleSheet, Text, View } from 'react-native'
 import Lit from './Lit'
 
 export default function App() {
+  const [text, onChangeText] = useState('')
+
   useEffect(() => {
     document.addEventListener(
       'lit-ready',
@@ -20,23 +22,27 @@ export default function App() {
   })
 
   const handle = async () => {
-    let { encryptedString, encryptedSymmetricKey } = await Lit.encrypt(
-      'test 123'
-    )
+    let { encryptedString, encryptedSymmetricKey } = await Lit.encrypt(text)
 
-    let { decryptedString } = await Lit.decrypt(
-      encryptedString,
-      encryptedSymmetricKey
-    )
+    // Store the encrypted string on Ceramic
 
-    console.log(decryptedString, 'DECRYPT')
+    // let { decryptedString } = await Lit.decrypt(
+    //   encryptedString,
+    //   encryptedSymmetricKey
+    // )
+
+    //console.log(decryptedString, 'DECRYPT')
   }
 
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
       <StatusBar style='auto' />
-      <button onClick={handle}>Try Stuff</button>
+      <TextInput
+        id='encrypt-input'
+        onChangeText={onChangeText}
+        placeholder='Recovery phrase goes here'
+      />
+      <button onClick={handle}>Encrypt</button>
     </View>
   )
 }
