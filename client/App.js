@@ -2,9 +2,12 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 import { StatusBar } from 'expo-status-bar'
-import { useEffect } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { useEffect, useState } from 'react'
+import { StyleSheet, Text, TextInput, View } from 'react-native'
+//import Ceramic from './Ceramic'
 import Lit from './Lit'
+
+import { CeramicClient } from '@ceramicnetwork/http-client'
 
 export default function App() {
   const [text, onChangeText] = useState('')
@@ -23,6 +26,14 @@ export default function App() {
 
   const handle = async () => {
     let { encryptedString, encryptedSymmetricKey } = await Lit.encrypt(text)
+
+    const ceramicDevSeed = randomBytes(32)
+    console.log(ceramicDevSeed, 'DEV SEED')
+
+    //const ceramic = new CeramicClient('https://ceramic-clay.3boxlabs.com')
+    //ceramic.authenticateCeramic(ceramicDevSeed)
+
+    //await Ceramic.tryEncrypt()
 
     // Store the encrypted string on Ceramic
 
