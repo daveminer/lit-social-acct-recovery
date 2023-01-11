@@ -4,10 +4,10 @@ dotenv.config()
 import { StatusBar } from 'expo-status-bar'
 import { useEffect, useState } from 'react'
 import { StyleSheet, Text, TextInput, View } from 'react-native'
-//import Ceramic from './Ceramic'
+import Ceramic from './Ceramic'
 import Lit from './Lit'
 
-import { CeramicClient } from '@ceramicnetwork/http-client'
+//import { CeramicClient } from '@ceramicnetwork/http-client'
 
 export default function App() {
   const [text, onChangeText] = useState('')
@@ -21,17 +21,19 @@ export default function App() {
       },
       false
     )
+
     Lit.connect()
+    //Ceramic.connect()
   })
 
   const handle = async () => {
     let { encryptedString, encryptedSymmetricKey } = await Lit.encrypt(text)
 
-    const ceramicDevSeed = randomBytes(32)
-    console.log(ceramicDevSeed, 'DEV SEED')
+    // const ceramicDevSeed = crypto.randomBytes(32)
+    // console.log(ceramicDevSeed, 'DEV SEED')
 
-    //const ceramic = new CeramicClient('https://ceramic-clay.3boxlabs.com')
-    //ceramic.authenticateCeramic(ceramicDevSeed)
+    // const ceramic = new CeramicClient('https://ceramic-clay.3boxlabs.com')
+    // ceramic.authenticateCeramic(ceramicDevSeed)
 
     //await Ceramic.tryEncrypt()
 
@@ -49,7 +51,6 @@ export default function App() {
     <View style={styles.container}>
       <StatusBar style='auto' />
       <TextInput
-        id='encrypt-input'
         onChangeText={onChangeText}
         placeholder='Recovery phrase goes here'
       />
