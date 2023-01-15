@@ -1,4 +1,4 @@
-import AccessControl from './AccessControl'
+import { accountRecovery } from './accessControl'
 import LitJsSdk from '@lit-protocol/sdk-browser'
 
 class Lit {
@@ -7,6 +7,7 @@ class Lit {
   litNodeClient = undefined
 
   async connect() {
+    console.log(this.chain, "CHAIN")
     this.litNodeClient = new LitJsSdk.LitNodeClient()
     await this.litNodeClient.connect()
   }
@@ -24,23 +25,27 @@ class Lit {
   // Encrypt arbitrary text and the key used to encrypt it. Returns encrypted
   // version of both.
   async encrypt(text) {
+    const accessControlConditions = accountRecovery()
     const { encryptedString, symmetricKey } = await LitJsSdk.encryptString(text)
 
     const authSig = await this.getAuthSig()
 
-    const encryptedSymmetricKey = await this.litNodeClient.saveEncryptionKey({
-      accessControlConditions: AccessControl.default,
+    const symmKeyBytes = await this.litNodeClient.saveEncryptionKey({
+      accessControlConditions,
       symmetricKey,
       authSig,
       chain: this.chain,
     })
 
+    const encryptedSymmetricKey = LitJsSdk.uint8arrayToString(
+      symmKeyBytes,
+      'base16'
+    )
+
     return {
       encryptedString,
-      encryptedSymmetricKey: LitJsSdk.uint8arrayToString(
-        encryptedSymmetricKey,
-        'base16'
-      ),
+      encryptedSymmetricKey,
+      accessControlConditions
     }
   }
 
@@ -56,7 +61,7 @@ class Lit {
     })
 
     const symmetricKey = await this.litNodeClient.getEncryptionKey({
-      accessControlConditions: AccessControl.default,
+      accessControlConditions: accountRecovery(),
       toDecrypt: encryptedSymmetricKey,
       chain: this.chain,
       authSig,

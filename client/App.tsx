@@ -1,13 +1,14 @@
-import * as dotenv from 'dotenv'
-dotenv.config()
+
 
 import { StatusBar } from 'expo-status-bar'
 import { useEffect, useState } from 'react'
 import { StyleSheet, Text, TextInput, View } from 'react-native'
-import Ceramic from './Ceramic'
+
+import Bundlr from './Bundlr'
 import Lit from './Lit'
 
-//import { CeramicClient } from '@ceramicnetwork/http-client'
+import { EXPO_BUNDLR_PRIVATE_KEY_FILE } from '@env'
+//import { EXPO_BUNDLR_PRIVATE_KEY_FILE } from 'react-native-dotenv'
 
 export default function App() {
   const [text, onChangeText] = useState('')
@@ -23,11 +24,19 @@ export default function App() {
     )
 
     Lit.connect()
-    //Ceramic.connect()
+
+    console.log(process.env, "PROCENV")
+
+    const privateKeyFile = EXPO_BUNDLR_PRIVATE_KEY_FILE
+    console.log(privateKeyFile, "PKF")
   })
 
   const handle = async () => {
-    let { encryptedString, encryptedSymmetricKey } = await Lit.encrypt(text)
+
+    const secret = await Lit.encrypt(text)
+    const packagedData = JSON.stringify(secret)
+
+    //console.log(Bundlr, "BUN")
 
     // const ceramicDevSeed = crypto.randomBytes(32)
     // console.log(ceramicDevSeed, 'DEV SEED')

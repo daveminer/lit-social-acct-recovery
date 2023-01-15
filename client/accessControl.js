@@ -1,6 +1,6 @@
 export const accountRecovery = () => {
   return {
-    contractAddress: process.env.REACT_APP_ACCOUNT_RECOVERY_CONTRACT,
+    contractAddress: process.env.EXPO_ACCOUNT_RECOVERY_CONTRACT,
     functionName: 'unlock',
     functionParams: ':secretIndex',
     functionAbi: {
@@ -9,8 +9,7 @@ export const accountRecovery = () => {
           type: 'uint256',
           name: 'secretIndex',
           internalType: 'uint256',
-        }
-
+        },
       ],
       name: 'unlock',
       outputs: [
@@ -18,10 +17,10 @@ export const accountRecovery = () => {
           type: 'bool',
           name: '',
           internalType: 'bool',
-        }
-      ]
+        },
+      ],
     },
-    chain: process.env.REACT_APP_CHAIN
+    chain: process.env.EXPO_CHAIN,
     returnValueTest: {
       key: '',
       comparator: '=',
