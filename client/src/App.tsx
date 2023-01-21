@@ -3,11 +3,10 @@ import { useDisconnect, useProvider, useSigner } from "wagmi"
 import Lit from "./Lit"
 import WalletStatus from "./components/WalletStatus"
 import "./App.css"
+import Bundlr from "./Bundlr"
 
 function App() {
   const [text, onChangeText] = useState("")
-
-  const { disconnect } = useDisconnect()
 
   const rainbowKitProvider: any = useProvider()
   const { data: rainbowKitSigner, isError, isLoading } = useSigner()
@@ -32,7 +31,10 @@ function App() {
 
     // Upload data
     try {
-      //let response = await bundlr?.uploadSecret(packagedData)
+      await Bundlr.ready(rainbowKitProvider)
+
+      let response = await Bundlr.uploadSecret("test123")
+      //let response = await Bundlr.uploadSecret(packagedData)
 
       console.log(`Data uploaded ==> https://arweave.net/${response.id}`)
     } catch (e) {
@@ -40,11 +42,16 @@ function App() {
     }
   }
 
+  const fundBundlr = async () => {
+    await Bundlr.fundNode()
+  }
+
   return (
     <div>
       <WalletStatus></WalletStatus>
-      <button onClick={() => disconnect()}>Disconnect</button>
+
       <input placeholder="Secret goes here" />
+      <button onClick={fundBundlr}>Fund</button>
       <button onClick={handleUploadButtonClick}>Encrypt</button>
     </div>
   )
